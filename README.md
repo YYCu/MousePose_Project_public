@@ -119,6 +119,21 @@ project-root/
 The exact folder names may be changed. If a folder name is changed, update all
 scripts that read from or write to that folder.
 
+## Annotations
+
+The `annotations/` folder contains manually created annotations in CSV format.
+
+The combined Round 3 training annotation file contains all manually annotated training images from the individual video folders. It can be loaded directly for data inspection or further processing without merging the original `CollectedData_Yuu.csv` files again.
+
+Validation and test annotations are provided as separate ground-truth files for model evaluation.
+
+```text
+annotations/
+├── round3_training_annotations.csv
+├── validation_ground_truth.csv
+└── test_ground_truth.csv
+```
+
 ## Requirements
 
 The scripts use packages including:
