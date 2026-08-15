@@ -47,7 +47,6 @@ CONFIG_PATH_RECORD = (
 TASK = "MousePose"
 SCORER = "Yuu"
 
-EXPECTED_IMAGE_COUNT = 100
 VIDEO_EXTENSION = ".flv"
 
 IMAGE_EXTENSIONS = {
@@ -96,11 +95,10 @@ def get_round1_images() -> list[Path]:
         )
     )
 
-    if len(image_paths) != EXPECTED_IMAGE_COUNT:
-        raise RuntimeError(
-            f"Expected exactly {EXPECTED_IMAGE_COUNT} images, "
-            f"but found {len(image_paths)}.\n\n"
-            f"Directory:\n{ROUND1_IMAGE_DIR}"
+    if not image_paths:
+        raise FileNotFoundError(
+            "No images were found in:\n"
+            f"{ROUND1_IMAGE_DIR}"
         )
 
     return image_paths
@@ -420,6 +418,7 @@ def copy_images_to_matching_folders(
 
 def verify_total_copied_images(
     target_directories: dict[str, Path],
+    expected_count: int,
 ) -> int:
     """
     Count all copied images across the labeled-data subfolders.
@@ -445,9 +444,9 @@ def verify_total_copied_images(
             )
         )
 
-    if total_copied != EXPECTED_IMAGE_COUNT:
+    if total_copied != expected_count:
         raise RuntimeError(
-            f"Expected {EXPECTED_IMAGE_COUNT} copied images in total, "
+            f"Expected {expected_count} copied images in total, "
             f"but found {total_copied}."
         )
 
@@ -565,7 +564,8 @@ def main() -> None:
     )
 
     total_copied = verify_total_copied_images(
-        target_directories
+        target_directories=target_directories,
+        expected_count=len(image_paths),
     )
 
     # --------------------------------------------------------
